@@ -48,25 +48,32 @@ const sendToXimilar = () => {
 </script>
 
 <template>
-	<div class="key_form">
-		<input v-model="API_XIMILAR">
-		<button class="send_button" @click="sendToXimilar">
-			Send to Ximilar
-			<span></span>
-			<span></span>
-			<span></span>
-			<span></span>
-		</button>
-	</div>
-	<div>
-		<cropper class="cropper" :src="imgOriginal" :stencil-props="{
-			aspectRatio: 10 / 12
-		}" @change="change" />
-	</div>
-	<div>
-		<img :src="imgCrop">
-	</div>
 
+	<div class="flex_container">
+		<div class="width_50 cropper_container">
+			<p class="promt">Select a photo fragment</p>
+			<cropper class="cropper" :src="imgOriginal" :stencil-props="{
+				aspectRatio: 10 / 12
+			}" @change="change" />
+		</div>
+		<div class="width_50 img_crop_container">
+			<div>
+				<img :src="imgCrop">
+			</div>
+			<div class="key_form">
+				<p class="promt">Please enter your API key. You can get it <a href="https://app.ximilar.com">here</a>.
+				</p>
+				<input v-model="API_XIMILAR">
+				<button class="send_button" @click="sendToXimilar">
+					Send to Ximilar
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped></style>
