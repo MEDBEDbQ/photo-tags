@@ -50,22 +50,19 @@ const sendToXimilar = () => {
 		})
 }
 
-interface HTMLInputEvent extends Event {
-	target: HTMLInputElement & EventTarget
-}
+const uploadPhoto = (event: Event) => {
+	const target = event.target as HTMLInputElement;
+	const files = target.files;
 
-const uploadPhoto = (event: HTMLInputEvent) => {
-	let files = (event as HTMLInputEvent).target.files;
-	if (!files || !files.length) return
-	if (files[0] != null) {
+	if (files && files.length > 0) {
 		if (imgOriginal.value != null) {
 			URL.revokeObjectURL(imgOriginal.value)
 		}
 		const blob = URL.createObjectURL(files[0]);
 
 		const reader = new FileReader();
-		reader.onload = (e) => {
-			return imgOriginal.value = blob;
+		reader.onload = () => {
+			imgOriginal.value = blob;
 		};
 		reader.readAsArrayBuffer(files[0]);
 	}
@@ -89,7 +86,8 @@ const uploadPhoto = (event: HTMLInputEvent) => {
 				</svg>
 				<span>Upload your photo</span>
 			</button>
-			<input id="uploadFileInput" type="file" accept="image/*" class="display_none" @change="uploadPhoto" />
+			<input id="uploadFileInput" ref="file" type="file" accept="image/*" class="display_none"
+				v-on:change="uploadPhoto" />
 		</div>
 		<div class="width_40">
 			<div class="img_crop_container">
