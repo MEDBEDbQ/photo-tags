@@ -9,6 +9,8 @@ const imgCrop = ref('');
 
 const API_XIMILAR = ref('');
 
+const tags = ref(new Array<String>());
+
 const change = ({ coordinates, canvas }: CropperResult): void => {
 	console.log(coordinates, canvas);
 	if (canvas == undefined)
@@ -39,6 +41,8 @@ const sendToXimilar = () => {
 	})
 		.then(data => {
 			console.log(data)
+			tags.value = data.records[0]._tags_simple;
+			console.log(tags.value)
 		})
 		.catch(err => {
 			console.error("Error: ")
@@ -53,12 +57,13 @@ const sendToXimilar = () => {
 		<div class="width_50 cropper_container">
 			<p class="promt">Select a photo fragment</p>
 			<cropper class="cropper" :src="imgOriginal" :stencil-props="{
-				aspectRatio: 10 / 12
 			}" @change="change" />
+			<button></button>
 		</div>
-		<div class="width_50 img_crop_container">
-			<div>
-				<img :src="imgCrop">
+		<div class="width_40">
+			<div class="img_crop_container">
+				<img class="img_crop" :src="imgCrop">
+				<p class="tags" v-if="tags.length != 0">Tags: {{ tags.join(', ') }}</p>
 			</div>
 			<div class="key_form">
 				<p class="promt">Please enter your API key. You can get it <a href="https://app.ximilar.com">here</a>.
