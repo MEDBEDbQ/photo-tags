@@ -49,6 +49,30 @@ const sendToXimilar = () => {
 			console.error(err)
 		})
 }
+
+interface HTMLInputEvent extends Event {
+	target: HTMLInputElement & EventTarget
+}
+
+const uploadPhoto = (event: HTMLInputEvent) => {
+	let files = (event as HTMLInputEvent).target.files;
+	if (!files || !files.length) return
+	if (files[0] != null) {
+		if (imgOriginal.value != null) {
+			URL.revokeObjectURL(imgOriginal.value)
+		}
+		const blob = URL.createObjectURL(files[0]);
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			return imgOriginal.value = blob;
+		};
+		reader.readAsArrayBuffer(files[0]);
+	}
+}
+
+
+
 </script>
 
 <template>
@@ -58,12 +82,19 @@ const sendToXimilar = () => {
 			<p class="promt">Select a photo fragment</p>
 			<cropper class="cropper" :src="imgOriginal" :stencil-props="{
 			}" @change="change" />
-			<button></button>
+			<button class="upload_button" onclick="document.getElementById('uploadFileInput').click()">
+				<svg width="180px" height="60px" viewBox="0 0 180 60" class="border">
+					<polyline points="179,1 179,59 1,59 1,1 179,1" class="bg-line" />
+					<polyline points="179,1 179,59 1,59 1,1 179,1" class="hl-line" />
+				</svg>
+				<span>Upload your photo</span>
+			</button>
+			<input id="uploadFileInput" type="file" accept="image/*" class="display_none" @change="uploadPhoto" />
 		</div>
 		<div class="width_40">
 			<div class="img_crop_container">
 				<img class="img_crop" :src="imgCrop">
-				<p class="tags" v-if="tags.length != 0">Tags: {{ tags.join(', ') }}</p>
+				<p class="tags" v-if="tags != undefined && tags.length != 0">Tags: {{ tags.join(', ') }}</p>
 			</div>
 			<div class="key_form">
 				<p class="promt">Please enter your API key. You can get it <a href="https://app.ximilar.com">here</a>.
